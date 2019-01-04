@@ -1,7 +1,5 @@
 <template>
-  <v-app id="inspire">
-
-
+  <div>
     <v-navigation-drawer
       :clipped="$vuetify.breakpoint.lgAndUp"
       v-model="drawer"
@@ -22,12 +20,7 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp"
-      color="blue darken-3"
-      dark
-      app
-      fixed
-    >
+    <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue darken-3" dark app fixed>
     <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <span class="hidden-sm-and-down">Recruit</span>
@@ -41,33 +34,7 @@
         </v-avatar>
       </v-btn>
     </v-toolbar>
-
-
-
-
-
-
-
-
-
-
-
-
-    <!--
-    <v-btn
-      fab
-      bottom
-      right
-      color="pink"
-      dark
-      fixed
-      @click="dialog = !dialog">
-      <v-icon>add</v-icon>
-    </v-btn>
--->
-
-  
-  </v-app>
+  </div>
 </template>
 
 <script>

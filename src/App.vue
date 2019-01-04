@@ -1,8 +1,7 @@
 <template>
   <v-app id="inspire">
 
-    <meu-menu :rotas="routes"/>
-    <minha-toolbar></minha-toolbar>
+    <meu-menu :rotas="routes"></meu-menu>
     <v-content transition="slide-x-transition">
       <router-view></router-view>
     </v-content>
