@@ -7,16 +7,17 @@
       app
     >
       <v-list dense>
-        <template v-for="rota in rotas">
-          <v-list-tile :key="rota" @click="rota.component">
+        <template  v-for="rota in rotas">
+          <router-link  class="v-list__tile" :key="rota" :to="rota.path ? rota.path : '/'">
+          <v-list-tile >
             <v-list-tile-action>
               <v-icon>{{ rota.icon }}</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-                <router-link class="v-list__tile" :to="rota.path ? rota.path : '/'">{{rota.titulo}}</router-link>
+                {{rota.titulo}}
             </v-list-tile-content>
           </v-list-tile>
-
+          </router-link>
         </template>
       </v-list>
     </v-navigation-drawer>
