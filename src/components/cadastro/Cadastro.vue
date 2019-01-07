@@ -1,72 +1,115 @@
 <template>
     <v-container>
         <form>
-            <v-text-field v-model="name" :error-messages="nameErrors"
-            :counter="10"
-            label="Name"
-            required
-            @input="$v.name.$touch()"
-            @blur="$v.name.$touch()"
-            ></v-text-field>
-
             <v-text-field
-            v-model="email"
-            :error-messages="emailErrors"
-            label="E-mail"
-            required
-            @input="$v.email.$touch()"
-            @blur="$v.email.$touch()"
-            ></v-text-field>
+                v-model="foto.titulo"  
+                label="Titulo"
+                v-validate="'required'"
+                :error-messages="errors.collect('foto.titulo')"
+                data-vv-name="foto.titulo"
+                data-vv-as="Título"
+                required
+                >
+            </v-text-field>
 
-            <v-text-field
-            v-model="email"
-            :error-messages="emailErrors"
-            label="E-mail"
-            required
-            @input="$v.email.$touch()"
-            @blur="$v.email.$touch()"
-            ></v-text-field>
+            <v-text-field 
+                name="descricao" 
+                v-model="foto.descricao" 
+                label="Descrição"
+                v-validate="'required'"
+                :error-messages="errors.collect('foto.descricao')"
+                data-vv-name="foto.descricao"
+                data-vv-as="Descrição"
+                required>
+            </v-text-field>
 
-            <v-text-field
-            v-model="email"
-            :error-messages="emailErrors"
-            label="E-mail"
-            required
-            @input="$v.email.$touch()"
-            @blur="$v.email.$touch()"
-            ></v-text-field>
+            <v-text-field 
+                name="url" 
+                v-model="foto.url"  
+                label="URL Imagem" 
+                v-validate="'required'"
+                :error-messages="errors.collect('foto.url')"
+                data-vv-name="foto.url"
+                data-vv-as="Url"
+                required>
+            </v-text-field>
 
-            <v-text-field
-            v-model="email"
-            :error-messages="emailErrors"
-            label="E-mail"
-            required
-            @input="$v.email.$touch()"
-            @blur="$v.email.$touch()"
-            ></v-text-field>
-
-            <v-checkbox
-            v-model="checkbox"
-            :error-messages="checkboxErrors"
-            label="Do you agree?"
-            required
-            @change="$v.checkbox.$touch()"
-            @blur="$v.checkbox.$touch()"
-            ></v-checkbox>
-
-            <v-btn @click="submit">submit</v-btn>
-            <v-btn @click="clear">clear</v-btn>
+            <meu-botao
+                colorTexto="primary"
+                rotulo="Limpar" 
+                @botaoAtivado="limpar"
+                flat
+                :confirmacao="false"
+            />
+            <meu-botao
+                colorTexto="primary"
+                rotulo="Salvar" 
+                estilo="success"
+                @botaoAtivado="gravar"
+                :confirmacao="false"
+            />
         </form>
     </v-container>
 </template>
 <script>
+import Botao from '../shared/botao/Botao.vue';
+import Foto from '../../domain/foto/Foto'
+import FotoService from '../../domain/foto/FotoService';
+
 export default {
+
+    components : {
+        'meu-botao' : Botao
+    },
+
+    data() {
+
+        return {
+            foto : new Foto(),
+            id : this.$route.params.id
+        }
+    },
+
+    created() {
+        this.service = new FotoService(this.$resource);
+        if(this.id){
+            this.service
+                .buscaFoto(this.id)
+                .then(foto => this.foto = foto );
+        }
+    },
+
+    methods : {
+
+        gravar(){
+            this.$validator
+                .validateAll()
+                .then( success => {
+                    if(success){
+                        this.service
+                        .cadastraFoto(this.foto)
+                        .then(() => { 
+                        if(this.id) this.$router.push({ name: 'home' });
+                        this.$router.push({ name: 'home' });
+                            this.foto = new Foto();
+                        },err => {
+                            console.log(err)
+                        });
+                    }
+                 });
+                
+        },
+
+        limpar(){
+            this.foto = new Foto()
+        }
+
+    }
+    
     
 }
 </script>
 <style>
-    .centralizado{
-        text-align: center;
-    }
+
 
 </style>

@@ -1,10 +1,12 @@
 import Cadastro from './components/cadastro/Cadastro.vue';
 import Home from './components/home/Home.vue';
-import DadosCad from './components/dados-cadastro/DadosCad.vue';
-
+import Login from './components/login/Login.vue';
 
 export const routes = [
-    { path: '', component: Home, titulo : 'Home', icon: 'contacts' }, //em b#/ranco equivale a localhost:8080/#/
-    { path: '/cadastro', component: Cadastro, titulo : 'Cadastro', icon: 'contacts' },
-    { path: '/dados-cadastro', component: DadosCad, titulo : 'Dados de Cadastro', icon: 'contacts' }
+    { path: '/', name : 'login', component: Login, titulo : 'Login', icon: 'contacts', meta: { public: true }, menu : false },
+    { path: '/login', name : 'login', component: Login, titulo : 'Login', icon: 'contacts', meta: { public: true }, menu : false },
+    { path: '/home', name : 'home', component: Home, titulo : 'Home', icon: 'contacts', menu : true },
+    { path: '/cadastro', name : 'cadastro', component: Cadastro, titulo : 'Cadastro', icon: 'contacts', menu : true },
+    { path: '/cadastro/:id', name : 'alterar', component: Cadastro, titulo : 'Alterar', icon: 'contacts', menu : false },
+    { path: '*', component: Login, meta: { public: true }, menu : false }
 ];

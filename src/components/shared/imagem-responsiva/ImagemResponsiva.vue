@@ -3,7 +3,13 @@
 </template>
 <script>
 export default {
-    props: ['url', 'titulo']
+  props: {
+    url: {
+      type: String,
+      required: true
+    },
+    titulo: String
+  }
 }
 </script>
 <style scoped>

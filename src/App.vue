@@ -1,11 +1,14 @@
 <template>
   <v-app id="inspire">
-
-    <meu-menu :rotas="routes"></meu-menu>
-    <v-content transition="slide-x-transition">
-      <router-view></router-view>
-    </v-content>
-
+    <template v-if="!$route.meta.public">
+      <meu-menu :rotas="routes"></meu-menu>
+      <v-content transition="slide-x-transition">
+        <router-view></router-view>
+      </v-content>
+    </template>
+    <template v-else>
+        <router-view></router-view>
+    </template>
    </v-app>
 </template>
 <script>
@@ -22,8 +25,14 @@ export default {
   data() {
 
     return {
+      fotos:[
+        {
+          url:'https://t1.ea.ltmcdn.com/pt/images/0/0/1/cao_agressivo_causas_e_tratamento_6100_600.jpg',
+          titulo:'cachorro'
+        }
+      ],
 
-      routes
+      routes : routes.filter(route => route.menu)
     }
 
   }
@@ -32,10 +41,4 @@ export default {
 </script>
 <style>
 
-  .pagina-enter-active, .pagina-leave-active {
-    transition: opacity .3s
-  }
-  .pagina-enter, .pagina-leave-active {
-    opacity: 0
-  }
 </style>

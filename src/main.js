@@ -1,32 +1,33 @@
-import Vue from 'vue'; //global view object
+import Vue from 'vue';
 import App from './App.vue';
+import VeeValidate, { Validator } from 'vee-validate'
+import ptLocale from 'vee-validate/dist/locale/pt_BR'
 
-
+import VueResource from 'vue-resource';
 import VueRouter from 'vue-router';
-import { routes } from './routes'; //export default
-
-
+import { routes } from './routes';
 import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
-import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
-
-//usar vueResourece globalmente
+Vue.use(VueResource);
 Vue.use(Vuetify)
 Vue.use(VueRouter);
-// é preciso unir a rota com o vuerouter, para que essa rota seja enxergada por ele
+Vue.http.options.root = 'http://5c3033648b95c100141e745b.mockapi.io/';
+
 
 const router = new VueRouter({ 
-    routes : routes, 
-    mode: 'history'
-  });//criar um roteador com auxilio do vuerouter
+  routes : routes, 
+  mode: 'history'
+});
 
-  
+Validator.localize('pt', ptLocale)
+Vue.use(VeeValidate, {
+  locale: 'pt'
+});
 
-//Vue = global view object
-//view instance
 new Vue({
-  el: '#app',//selector de id
+  el: '#app',
   router : router,
   render: h => h(App)
 })

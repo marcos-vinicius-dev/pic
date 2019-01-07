@@ -1,28 +1,51 @@
 <template>
-    <button @click="disparaAcao()" class="botao" :class="estiloDoBotao" :type="tipo">{{ rotulo }}</button>
+    <v-btn  @click="disparaAcao()" :class="estilo" :small="small" :large="large"  :color="colorTexto" :flat="flat">{{ rotulo }}<confirm ref="confirm"></confirm></v-btn>
 </template>
 <script>
+import Confirm from '../confirm/Confirm.vue';
+
 export default {
-    //verificação
+    data () {
+      return {
+        dialog: true
+      }
+    },
+    components: {
+        'confirm' : Confirm
+    },
+
     props: {
-        tipo: {
-            required: true,
-            type: String
-        },
+
         rotulo: {
             required: true,
             type: String
         },
+        tituloConfirmacao: {
+            type: String
+        },
         confirmacao: Boolean,
-        estilo: String
+        estilo: String,
+        flat: Boolean,
+        colorTexto: String,
+        small: Boolean,
+        large: Boolean
+        
     },
+    data () {
+      return {
+        dialog: false
+      }
+    },
+    
 
     methods: {
         disparaAcao(){
             if(this.confirmacao){
-                if(confirm('Confirma operação?')){
-                    this.$emit('botaoAtivado');
-                }
+                this.$refs.confirm.open(this.tituloConfirmacao, 'Confirma Operação?', { color: 'red' }).then((confirm) => {
+                    if(confirm){
+                        this.$emit('botaoAtivado');
+                    }
+                })
                 return;
             }
             this.$emit('botaoAtivado');
@@ -32,30 +55,14 @@ export default {
 
     computed:{
         estiloDoBotao(){
-            if(this.estilo == 'padrao' || !this.estilo) return 'botao-padrao';
-            if(this.estilo == 'perigo') return 'botao-perigo';
+            if(this.estilo == 'success' || !this.estilo) return 'success';
+            if(this.estilo == 'error') return 'error';
         }
     }
     
 }
 </script>
 <style scoped>
-    .botao {
-        display: inline-block;
-        padding: 10px;
-        border-radius: 3px;
-        margin: 10px;
-        font-size: 1.2em;
-    }
 
-    .botao-perigo {
-        background: firebrick;
-        color: white;
-    }
-
-    .botao-padrao {
-        background: darkcyan;
-        color: white;
-    }
 
 </style>

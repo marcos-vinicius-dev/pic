@@ -1,96 +1,115 @@
 <template>
-  <div>
-    <h1 class="centralizado">{{ titulo }}</h1>
-    <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre por parte do titulo">
-    <b-input icon="magnify" type="search" placeholder="Search..."></b-input>
-    <ul class="lista-fotos">
-      <li :key="foto" class="lista-fotos-item" v-for="foto of fotosComFiltro">
-
-        <meu-painel :titulo="foto.titulo">
-            <imagem-responsiva :url="foto.url" :titulo="foto.titulo"></imagem-responsiva>
-            <meu-botao 
-              tipo="button" 
-              rotulo="REMOVER" 
-              @botaoAtivado="remove(foto)"
-              :confirmacao="true"
-              estilo="perigo"/>
-            <!--usa o click.native pq esté botaõ é um componentes-->
-        </meu-painel>
-
-      </li>
-    </ul>
-
-  </div>
+   <div>
+      <v-layout row>
+         <v-flex xs12>
+            <v-card flat color="transparent">
+               <v-container fluid grid-list-lg>
+                  <v-layout row wrap>
+                     <v-flex xs12>
+                        <v-text-field
+                           label="Filtro"
+                           box
+                           v-on:keyup.native="filtro = $event.target.value"
+                           append-icon="search"
+                           placeholder="Pesquise por titulo"
+                           ></v-text-field>
+                     </v-flex>
+                  </v-layout>
+                  <v-layout row wrap>
+                     <v-flex xs12>
+                        <h2 class="black--text ">Fotos</h2>
+                     </v-flex>
+                  </v-layout>
+                  <v-layout row wrap>
+                     <v-flex xs12 sm6 md6 lg4 :key="foto" v-for="foto of fotosComFiltro">
+                        <meu-painel :titulo="foto.titulo" :url="foto.url" :descricao="foto.descricao">
+                           <imagem-responsiva  slot="imagem" aspect-ratio="2.75" height="210px" :url="foto.url" :titulo="foto.titulo"></imagem-responsiva>
+                           <router-link slot="actions" :to="{ name : 'cadastro', params : { id: foto.id } }">
+                              <meu-botao 
+                                 flat="true"
+                                 colorTexto="primary"
+                                 rotulo="Alterar" 
+                                 :confirmacao="false"
+                                 />
+                           </router-link>
+                           <v-spacer slot="actions"></v-spacer>
+                           <meu-botao  slot="actions"
+                              flat="false" 
+                              colorTexto="white"
+                              rotulo="Remover" 
+                              @botaoAtivado="remove(foto)"
+                              :confirmacao="true"
+                              tituloConfirmacao="Apagar"
+                              estilo="error"/>
+                        </meu-painel>
+                     </v-flex>
+                  </v-layout>
+               </v-container>
+            </v-card>
+         </v-flex>
+      </v-layout>
+   </div>
 </template>
-
 <script>
-import Painel from '../shared/painel/Painel.vue';
-import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue';
-import Botao from '../shared/botao/Botao.vue';
-
-export default {
-
-  components: {
-    'meu-painel' : Painel,
-    'imagem-responsiva' : ImagemResponsiva,
-    'meu-botao' : Botao
-  },
-
-  data() {
-
-    return {
-
-      titulo: 'Alurapic', 
-      fotos: [],
-      filtro : ''
-    }
-  },
-
-  methods : {
-    remove(foto){
-      alert('Remover a foto' + foto.titulo);
-    }
-  },
-
-  //ciclo inicial
-  created() {
-
-    this.$http.get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())
-      .then(fotos => this.fotos = fotos, err => console.log(err));
-  },
-
-  computed: {
-    fotosComFiltro(){
-      if(this.filtro){
-        //expressao regular
-        let exp = new RegExp(this.filtro.trim(), 'i');
-        return this.fotos.filter(foto => exp.test(foto.titulo));
-      }else{
-        return this.fotos;
-      }
-    }
-
-  }
-}
-
+   import Painel from '../shared/painel/Painel.vue';
+   import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue';
+   import Botao from '../shared/botao/Botao.vue';
+   import FotoService from '../../domain/foto/FotoService';
+   
+   export default {
+   
+     components: {
+       'meu-painel' : Painel,
+       'imagem-responsiva' : ImagemResponsiva,
+       'meu-botao' : Botao
+     },
+   
+     data() {
+   
+       return {
+         fotos: [],
+         filtro : ''
+       }
+     },
+     //ciclo inicial
+     created() {
+   
+       this.service = new FotoService(this.$resource);
+       this.service
+         .listaFotos()
+         .then(fotos => this.fotos = fotos, err => {
+           console.log(err.message)
+   
+         });
+     
+     },
+     methods : {
+       remove(foto){
+         this.service
+         .apagaFoto(foto.id)
+         .then(() => {
+           let indice = this.fotos.indexOf(foto);
+           this.fotos.splice(indice, 1)
+           this.foto = new Foto()
+         },
+         err => {
+           console.log(err)
+         });
+       }
+     },
+     computed: {
+       fotosComFiltro(){
+         if(this.filtro){
+           let exp = new RegExp(this.filtro.trim(), 'i');
+           return this.fotos.filter(foto => exp.test(foto.titulo) || exp.test(foto.descricao));
+         }else{
+           return this.fotos;
+         }
+       }
+   
+     }
+   }
+   
 </script>
-
 <style>
-
-
-  .centralizado {
-
-    text-align: center;
-  }
-
-  .lista-fotos {
-    list-style: none;
-  }
-
-  .lista-fotos .lista-fotos-item {
-
-    display: inline-block;
-  }
-
 </style>
