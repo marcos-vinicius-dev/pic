@@ -48,7 +48,11 @@ import User from '../../domain/user/User'
     data() {
 
         return {
-            user : new User()
+            user : {
+              email: 'uds@teste.com',
+              senha: 'uds'
+            }
+
         }
     },
 
