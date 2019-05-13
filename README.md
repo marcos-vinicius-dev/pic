@@ -1,4 +1,4 @@
-# pic
+# Vue.Pic
 
 ## Datails
 Creating a SPA (Single Page Application) in the form of a photo management program. Integration with API, creation of components and use of directives, routes and views.
