@@ -5,9 +5,6 @@ Creating a SPA (Single Page Application) in the form of a photo management progr
 
 Using best practices, form validation and more features that can help you in building your SPA like code splitting, lazy loading and more.
 
-> A Vue.js project
-
-## Build Setup
 
 ``` bash
 # install dependencies
